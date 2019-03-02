@@ -100,7 +100,7 @@ def camThread(LABELS, resultsEm, frameBuffer, camera_width, camera_height, vidfp
             imdraw = overlay_on_image(frames, res)
             lastresults = res
         else:
-            imdraw = overlay_on_image(frames, None)
+            imdraw = overlay_on_image(frames, lastresults)
 
         cv2.imshow(window_name, cv2.resize(imdraw, (width, height)))
 
