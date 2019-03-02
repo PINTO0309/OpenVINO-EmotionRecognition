@@ -1,10 +1,15 @@
 # OpenVINO-EmotionRecognition
 OpenVINO+NCS2/NCS+MutiModel(FaceDetection, EmotionRecognition)+MultiStick+MultiProcess+MultiThread+USB Camera/PiCamera. RaspberryPi 3 compatible.
 
+# Usage
 ```bash
+$ sudo apt-get install -y python3-picamera
+$ sudo -H pip3 install imutils --upgrade
+$ git clone https://github.com/PINTO0309/OpenVINO-EmotionRecognition.git
+$ cd OpenVINO-EmotionRecognition
 $ python3 main.py
 ```
-
+# Parameters
 ```bash
 usage: main.py [-h] [-cm MODE_OF_CAMERA] [-cn NUMBER_OF_CAMERA]
                [-wd CAMERA_WIDTH] [-ht CAMERA_HEIGHT] [-numncs NUMBER_OF_NCS]
