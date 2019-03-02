@@ -69,6 +69,7 @@ def camThread(LABELS, resultsEm, frameBuffer, camera_width, camera_height, vidfp
         window_name = "USB Camera"
     else:
         vs = PiVideoStream((camera_width, camera_height), vidfps).start()
+        sleep(3)
         window_name = "PiCamera"
 
     cv2.namedWindow(window_name, cv2.WINDOW_AUTOSIZE)
@@ -109,8 +110,8 @@ def camThread(LABELS, resultsEm, frameBuffer, camera_width, camera_height, vidfp
 
         ## Print FPS
         framecount += 1
-        if framecount >= 15:
-            fps       = "(Playback) {:.1f} FPS".format(time1/15)
+        if framecount >= 25:
+            fps       = "(Playback) {:.1f} FPS".format(time1/25)
             detectfps = "(Detection) {:.1f} FPS".format(detectframecount/time2)
             framecount = 0
             detectframecount = 0
