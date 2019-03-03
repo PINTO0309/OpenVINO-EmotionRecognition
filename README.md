@@ -1,7 +1,7 @@
 # OpenVINO-EmotionRecognition
 OpenVINO+NCS2/NCS+MutiModel(FaceDetection, EmotionRecognition)+MultiStick+MultiProcess+MultiThread+USB Camera/PiCamera. RaspberryPi 3 compatible.
 # Motion image
-**RaspberryPi3 + NCS2 + OenVINO, 320x240**  
+**RaspberryPi3 + NCS2 + OenVINO, Async, 320x240**  
 ![01](media/01.gif)  
 
 # Usage
