@@ -156,7 +156,7 @@ class BaseNcsWorker():
         elif number_of_ncs == 2:
             self.num_requests = 2
         elif number_of_ncs >= 3:
-            self.num_requests = 2
+            self.num_requests = 1
 
         print("g_number_of_allocated_ncs =", g_number_of_allocated_ncs, "number_of_ncs =", number_of_ncs)
 
