@@ -17,7 +17,7 @@ $ sudo apt-get install -y python3-picamera
 $ sudo -H pip3 install imutils --upgrade
 $ git clone https://github.com/PINTO0309/OpenVINO-EmotionRecognition.git
 $ cd OpenVINO-EmotionRecognition
-$ python3 main.py -wd 320 -ht 240
+$ python3 main.py -wd 320 -ht 240 -numncs 1
 ```
 
 # Parameters
