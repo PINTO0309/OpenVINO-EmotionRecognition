@@ -7,6 +7,9 @@ OpenVINO+NCS2/NCS+MutiModel(FaceDetection, EmotionRecognition)+MultiStick+MultiP
 **RaspberryPi3 + NCS2 x1 + OenVINO, Async, 320x240**  
 **Youtube : https://youtu.be/wF3JD3jyGaA**  
 ![01](media/01.gif)  
+  
+**Corei7 + NCS2 x2 + OenVINO, Async, 320x240**  
+<img src="media/02.gif" width=480px>  
 
 # Usage
 ```bash
