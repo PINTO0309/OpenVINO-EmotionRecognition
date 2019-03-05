@@ -40,7 +40,7 @@ g_plugin = None
 g_inferred_request = None
 g_heap_request = None
 g_inferred_cnt = 0
-g_number_of_allocated_ncs = False
+g_number_of_allocated_ncs = 0
 
 LABELS = ["neutral", "happy", "sad", "surprise", "anger"]
 COLORS = np.random.uniform(0, 255, size=(len(LABELS), 3))
@@ -149,9 +149,18 @@ class BaseNcsWorker():
         global g_number_of_allocated_ncs
 
         self.devid = devid
-        self.num_requests = 4
+        if number_of_ncs   == 0:
+            self.num_requests = 4
+        elif number_of_ncs == 1:
+            self.num_requests = 4
+        elif number_of_ncs == 2:
+            self.num_requests = 2
+        elif number_of_ncs >= 3:
+            self.num_requests = 1
 
-        if g_number_of_allocated_ncs < number_of_ncs:
+        print("g_number_of_allocated_ncs =", g_number_of_allocated_ncs, "number_of_ncs =", number_of_ncs)
+
+        if g_number_of_allocated_ncs < 1:
             self.plugin = IEPlugin(device="MYRIAD")
             self.inferred_request = [0] * self.num_requests
             self.heap_request = []
@@ -338,6 +347,7 @@ def inferencer(resultsFd, resultsEm, frameBuffer, number_of_ncs, fd_model_path, 
                                                               NcsWorkerEm(devid, resultsFd, resultsEm, em_model_path, 0),))
         thworker.start()
         threads.append(thworker)
+        print("Thread-"+str(devid))
 
     for th in threads:
         th.join()
