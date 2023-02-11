@@ -11,9 +11,9 @@ from os.path import isfile, join
 from time import sleep
 import multiprocessing as mp
 try:
-    from armv7l.openvino.inference_engine import IENetwork, IEPlugin
+    from armv7l.openvino.inference_engine import IENetwork, IECore
 except:
-    from openvino.inference_engine import IENetwork, IEPlugin
+    from openvino.inference_engine import IENetwork, IECore
 import heapq
 import threading
 try:
@@ -39,7 +39,7 @@ vs = None
 window_name = ""
 elapsedtime = 0.0
 
-g_plugin = None
+g_core = None
 g_inferred_request = None
 g_heap_request = None
 g_inferred_cnt = 0
@@ -145,7 +145,7 @@ def async_infer(ncsworkerFd, ncsworkerEm):
 class BaseNcsWorker():
 
     def __init__(self, devid, model_path, number_of_ncs):
-        global g_plugin
+        global g_core
         global g_inferred_request
         global g_heap_request
         global g_inferred_cnt
@@ -164,26 +164,26 @@ class BaseNcsWorker():
         print("g_number_of_allocated_ncs =", g_number_of_allocated_ncs, "number_of_ncs =", number_of_ncs)
 
         if g_number_of_allocated_ncs < 1:
-            self.plugin = IEPlugin(device="MYRIAD")
+            self.core = IECore()
             self.inferred_request = [0] * self.num_requests
             self.heap_request = []
             self.inferred_cnt = 0
-            g_plugin = self.plugin
+            g_core = self.core
             g_inferred_request = self.inferred_request
             g_heap_request = self.heap_request
             g_inferred_cnt = self.inferred_cnt
             g_number_of_allocated_ncs += 1
         else:
-            self.plugin = g_plugin
+            self.core = g_core
             self.inferred_request = g_inferred_request
             self.heap_request = g_heap_request
             self.inferred_cnt = g_inferred_cnt
 
         self.model_xml = model_path + ".xml"
         self.model_bin = model_path + ".bin"
-        self.net = IENetwork(model=self.model_xml, weights=self.model_bin)
-        self.input_blob = next(iter(self.net.inputs))
-        self.exec_net = self.plugin.load(network=self.net, num_requests=self.num_requests)
+        self.net = self.core.read_network(model=self.model_xml, weights=self.model_bin)
+        self.input_blob = next(iter(self.net.input_info))
+        self.exec_net = self.core.load_network(network=self.net, device_name="CPU", num_requests=self.num_requests)
 
 
 class NcsWorkerFd(BaseNcsWorker):
@@ -224,12 +224,12 @@ class NcsWorkerFd(BaseNcsWorker):
                     self.inferred_cnt = 0
 
                 self.exec_net.requests[reqnum].wait(-1)
-                out = self.exec_net.requests[reqnum].outputs["detection_out"].flatten()
+                out = self.exec_net.requests[reqnum].output_blobs["detection_out"]
 
                 detection_list = []
                 face_image_list = []
 
-                for detection in out.reshape(-1, 7):
+                for detection in out.buffer.reshape(-1, 7):
 
                     confidence = float(detection[2])
 
@@ -323,7 +323,7 @@ class NcsWorkerEm(BaseNcsWorker):
 
                 if self.exec_net.requests[dev].wait(0) == 0:
                     self.exec_net.requests[dev].wait(-1)
-                    out = self.exec_net.requests[dev].outputs["prob_emotion"].flatten()
+                    out = self.exec_net.requests[dev].output_blobs["prob_emotion"].buffer
                     emotion = LABELS[int(np.argmax(out))]
                     detection_list.extend([emotion])
                     self.resultsEm.put([detection_list])
